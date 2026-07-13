@@ -57,11 +57,9 @@ ecommerse/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/shopease.git
-cd shopease
+git clone https://github.com/mehrin-as/shopease-ecommerce.git
+cd shopease-ecommerce
 ```
-
-*(Replace `YOUR_USERNAME` and repo name with yours after you push.)*
 
 ### 2. Create a virtual environment (recommended)
 
