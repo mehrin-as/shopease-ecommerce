@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Cart - ShopEase{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <span class="fs-1 me-2">🛒</span>
+    <h1 class="page-header m-0">Your Cart</h1>
+</div>
+
+{% if cart_items %}
+<div class="card p-3 bg-white border shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle m-0">
+            <thead>
+                <tr class="text-secondary" style="border-bottom: 2px solid #dee2e6;">
+                    <th scope="col">Product</th>
+                    <th scope="col" class="text-center">Quantity</th>
+                    <th scope="col" class="text-end">Subtotal</th>
+                    <th scope="col" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td class="fw-semibold text-dark" style="font-size: 0.95rem;">
+                        {{ item.product.name }}
+                    </td>
+                    <td class="text-center">
+                        <div class="d-flex align-items-center justify-content-center gap-1">
+                            <form method="post" action="{% url 'cart_update' item.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="decrement">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm px-2 py-0">−</button>
+                            </form>
+                            <span class="px-2 fw-semibold">{{ item.quantity }}</span>
+                            <form method="post" action="{% url 'cart_update' item.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="increment">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm px-2 py-0">+</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td class="text-end fw-bold">₹{{ item.total_price|floatformat:2 }}</td>
+                    <td class="text-center">
+                        <form method="post" action="{% url 'cart_remove' item.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger py-1 px-3">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr style="border-top: 2px solid #dee2e6;">
+                    <td class="fw-bold fs-5 text-dark py-3">Total</td>
+                    <td></td>
+                    <td class="text-end fw-bold fs-5 text-dark py-3">₹{{ total_price|floatformat:2 }}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'checkout' %}" class="btn btn-success fw-bold px-4 py-2 rounded-2" style="background-color: #0b6637; border-color: #0b6637; font-size: 1.05rem;">
+        Proceed to Checkout
+    </a>
+</div>
+{% else %}
+<div class="card p-5 bg-white text-center border shadow-sm">
+    <div class="fs-1 text-secondary mb-3">🛒</div>
+    <h3 class="fw-bold text-dark">Your Cart is Empty</h3>
+    <p class="text-secondary mt-2 mb-4">Browse and add items to your cart to get started.</p>
+    <a href="{% url 'product_list' %}" class="btn btn-primary btn-view py-2 px-4 shadow-sm" style="display: inline-block; max-width: 200px; margin: 0 auto;">Shop Now</a>
+</div>
+{% endif %}
+{% endblock %}

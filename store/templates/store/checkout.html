@@ -1,0 +1,53 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Checkout - ShopEase{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card bg-white border shadow-sm rounded-3 overflow-hidden">
+            <div class="p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="fs-3 me-2">📋</span>
+                    <h2 class="fw-bold m-0" style="font-size: 1.7rem; color: #212529;">Checkout Summary</h2>
+                </div>
+
+                <div class="table-responsive border border-light rounded mb-4">
+                    <table class="table align-middle m-0" style="font-size: 1rem;">
+                        <tbody>
+                            {% for item in cart_items %}
+                                <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                    <td class="text-secondary py-3 ps-3 fw-semibold">
+                                        {{ item.product.name }}
+                                    </td>
+                                    <td class="text-end py-3 pe-3 text-dark fw-bold">
+                                        ₹{{ item.total_price|floatformat:2 }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            <tr style="background-color: #f8f9fa;">
+                                <td class="py-3 ps-3 fw-bold fs-5 text-dark">Total:</td>
+                                <td class="text-end py-3 pe-3 fw-bold fs-4 text-dark">
+                                    ₹{{ total_price|floatformat:2 }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <form method="post" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success fw-bold px-4 py-2 rounded-2" style="background-color: #0b6637; border-color: #0b6637; font-size: 1.05rem;">
+                            Place Order
+                        </button>
+                        <a href="{% url 'cart_detail' %}" class="btn btn-outline-secondary fw-semibold px-4 py-2 rounded-2" style="background-color: #ffffff; color: #495057; border-color: #ced4da; font-size: 1.05rem;">
+                            Back to Cart
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

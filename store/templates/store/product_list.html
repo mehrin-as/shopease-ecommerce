@@ -1,0 +1,70 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Products - ShopEase{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center mb-4">
+    <span class="fs-1 me-2">🛍️</span>
+    <h1 class="page-header m-0">Browse Products</h1>
+</div>
+
+<!-- Filter and Search Form -->
+<form method="get" class="mb-5 bg-white p-3 rounded shadow-sm border border-light">
+    <div class="row g-3 align-items-center">
+        <!-- Category Dropdown -->
+        <div class="col-md-4">
+            <select name="category" class="form-select">
+                <option value="">All Categories</option>
+                {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if cat.id|stringformat:"i" == selected_category %}selected{% endif %}>
+                        {{ cat.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- Search Input -->
+        <div class="col-md-5">
+            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ query|default:'' }}">
+        </div>
+        <!-- Filter Button -->
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </div>
+</form>
+
+<!-- Products Grid -->
+<div class="row g-4">
+    {% for product in products %}
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="card h-100 bg-white">
+                <div class="position-relative bg-light d-flex align-items-center justify-content-center" style="height: 250px; overflow: hidden;">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ product.name }}">
+                    {% else %}
+                        <div class="text-secondary fs-4">No Image</div>
+                    {% endif %}
+                    
+                    {% if product.online_exclusive %}
+                        <span class="exclusive-badge">Online Exclusive</span>
+                    {% endif %}
+                </div>
+                <div class="card-body d-flex flex-column p-3">
+                    <h5 class="card-title fs-6 text-dark text-truncate-2 mb-2" style="height: 38px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.25;">
+                        {{ product.name }}
+                    </h5>
+                    <div class="mt-auto">
+                        <p class="price-tag fs-5 mb-3">₹{{ product.price|floatformat:2 }}</p>
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-view w-100 text-center">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center my-5">
+            <p class="fs-4 text-secondary">No products found matching your criteria.</p>
+            <a href="{% url 'product_list' %}" class="btn btn-secondary mt-2">Clear Filters</a>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
